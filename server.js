@@ -42,7 +42,7 @@ app.use("/api/messages",messageRoute);
 app.use("/api/reviews",reviewRoute);
 
 
-app.use((err,req,res)=>{
+app.use((err,req,res,next)=>{
     errStatusCode=err.statusCode || 500;
     errMessage = err.message || "something went wrong";
 
