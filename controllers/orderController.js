@@ -56,3 +56,36 @@ exports.getOrders = async(req,res,next)=>{
         })
     }
 }
+
+// Get all Orders
+
+
+exports.getAllOrders = async (req, res, next) => {
+    try {
+      const allOrders = await Order.find().populate("gigId").populate("sellerId", "username").populate("buyerId", "username");
+  
+      // Calculate 10% revenue for each order
+      const ordersWithRevenue = allOrders.map((order) => {
+        const revenue = order.price * 0.1;
+        return {
+          ...order.toObject(),
+          revenue,
+        };
+      });
+  
+      // Calculate total revenue
+      const totalRevenue = ordersWithRevenue.reduce((total, order) => total + order.revenue, 0);
+  
+      res.status(200).json({
+        success: true,
+        orders: ordersWithRevenue,
+        totalRevenue,
+      });
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  };
+  

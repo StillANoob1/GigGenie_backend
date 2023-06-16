@@ -10,10 +10,7 @@ exports.deleteUser= async(req,res)=>{
         success:false,
         message:"User does not exists"
     })
-    if(req.userId !== user._id.toString()) return res.status(500).json({
-        success:false,
-        message:"You can delete Only Your Id"
-    })
+    
 
     await User.findByIdAndDelete(req.params.id);
     res.status(200).json({
@@ -43,3 +40,69 @@ exports.getUser= async(req,res,next)=>{
         })
     }
 }
+
+// Fetch all users
+exports.getAllUsers = async (req, res) => {
+    try {
+      const users = await User.find();
+      if (users.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'No users found',
+        });
+      }
+      res.status(200).json({
+        success: true,
+        users: users,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  };
+  
+  // Fetch seller users
+  exports.getSellerUsers = async (req, res) => {
+    try {
+      const sellerUsers = await User.find({ isSeller: true });
+      if (sellerUsers.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'No seller users found',
+        });
+      }
+      res.status(200).json({
+        success: true,
+        users: sellerUsers,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  };
+  
+  // Fetch buyer users
+  exports.getBuyerUsers = async (req, res) => {
+    try {
+      const buyerUsers = await User.find({ isSeller: false });
+      if (buyerUsers.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'No buyer users found',
+        });
+      }
+      res.status(200).json({
+        success: true,
+        users: buyerUsers,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  };

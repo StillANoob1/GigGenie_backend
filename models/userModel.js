@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
     isSeller:{
         type:Boolean,
         default:false
+    },
+    role: {
+        type: String,
+        default: "user"
     }
 
 },{

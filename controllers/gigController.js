@@ -31,7 +31,7 @@ exports.deleteGig = async (req, res, next) => {
     try {
         const gig = await Gig.findById(req.params.id)
         if (!gig) return next(errorHandlor(500, "Gig not Found"));
-        if (gig.userId !== req.userId) return next(errorHandlor(403, "You can delete Only Your Gig"));
+       
         await Gig.findByIdAndDelete(req.params.id);
         res.status(201).json({
             success: true,
@@ -76,7 +76,7 @@ exports.getGigs = async ( req,res,next )=>{
        ...((q.userId) && {userId : q.userId})
     }
     try {
-        const allGigs = await Gig.find(filters).sort({[q.sort]:-1})
+        const allGigs = await Gig.find(filters).sort({[q.sort]:-1}).populate('userId'); 
         res.status(200).json({
             allGigs
         })
